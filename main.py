@@ -31,18 +31,26 @@ def start(my_store):
                 j = j + 1
                 print(f"{j}. {product.show()}")
 
-
             shopping_list = []
             while True:
                 print(f"\nWhich product would you like? (Enter 1 - {len(my_store.products_list)} or press Enter to quit)")
                 user_input_for_product = user_input_and_validate_range(1, len(my_store.products_list), True)
-                #None means user pressed Enter
+                #None means user pressed Enter without input
                 if user_input_for_product is None:
                     break
 
                 selected_product = my_store.products_list[user_input_for_product - 1]
-                print(f"How many items do you want to purchase? (Enter 1 - {selected_product.quantity})")
-                user_input_for_amount = user_input_and_validate_range(1, selected_product.quantity, False)
+                shopping_cart_quantity_for_product = 0
+                for item in shopping_list:
+                    if item[0] == selected_product:
+                        shopping_cart_quantity_for_product += item[1]
+                if shopping_cart_quantity_for_product == selected_product.quantity:
+                    print("There are no more products of this type available!")
+                    continue
+
+                available_amount = selected_product.quantity - shopping_cart_quantity_for_product
+                print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")
+                user_input_for_amount = user_input_and_validate_range(1, available_amount, False)
                 shopping_list.append((selected_product, user_input_for_amount))
                 print("Product added to list!")
 
