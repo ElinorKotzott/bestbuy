@@ -32,18 +32,19 @@ def start(my_store):
                     j = j + 1
                     print(f"{j}. {product.show()}")
                 purchase_list = []
+
                 while True:
                     print(f"\nWhich product would you like? (Enter 1 - {len(my_store.products_list)})")
-                    product_choice= my_store.products_list[user_input_and_validate_range(1, len(my_store.products_list)) - 1]
-                    chosen_product = product_choice.name
-                    print(f"How many items do you want to purchase? (Enter 1 - {my_store.product_choice.quantity})")
-                    chosen_amount = user_input_and_validate_range(1, my_store.product_choice.quantity)
-                    purchase_list.append((chosen_product, chosen_amount))
+                    user_input_for_product = user_input_and_validate_range(1, len(my_store.products_list), True)
+                    if user_input_for_product is None:
+                        break
 
+                    selected_product = my_store.products_list[user_input_for_product - 1]
+                    print(f"How many items do you want to purchase? (Enter 1 - {selected_product.quantity})")
+                    user_input_for_amount = user_input_and_validate_range(1, selected_product.quantity, False)
+                    purchase_list.append((selected_product.name, user_input_for_amount))
 
-
-
-                my_store.order()
+                my_store.order(purchase_list)
             elif user_choice == 4:
                 sys.exit()
             else:
@@ -53,11 +54,15 @@ def start(my_store):
             print("Please enter kjkj!\n")
 
 
-def user_input_and_validate_range(lower_bound, upper_bound):
+def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
+    """validates user input based on its parameters. returns none if user pressed enter while empty input was allowed. returns valid user input"""
     while True:
+        user_choice = input().strip()
+        if allow_empty_input:
+            if not user_choice:
+                return
         try:
-
-            user_choice = int(input())
+            user_choice = int(user_choice)
             if lower_bound <= user_choice <= upper_bound:
                 return user_choice
             else:
