@@ -34,11 +34,11 @@ def start(my_store):
                 purchase_list = []
                 while True:
                     print(f"\nWhich product would you like? (Enter 1 - {len(my_store.products_list)})")
-                    product_choice = user_input_and_validate_range(1, len(my_store.products_list))
-                    chosen_product = my_store.products_list[product_choice - 1]
-                    print(f"How many items do you want to purchase? (Enter 1 - {my_store.chosen_product.quantity})")
-                    chosen_amount = user_input_and_validate_range(1, my_store.chosen_product.quantity)
-                    purchase_list.append((chosen_product.name, chosen_))
+                    product_choice= my_store.products_list[user_input_and_validate_range(1, len(my_store.products_list)) - 1]
+                    chosen_product = product_choice.name
+                    print(f"How many items do you want to purchase? (Enter 1 - {my_store.product_choice.quantity})")
+                    chosen_amount = user_input_and_validate_range(1, my_store.product_choice.quantity)
+                    purchase_list.append((chosen_product, chosen_amount))
 
 
 
