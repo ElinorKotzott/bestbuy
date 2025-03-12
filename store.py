@@ -2,11 +2,9 @@ import products
 
 
 class Store:
-    products_list = []
-
 
     def __init__(self, products_list):
-        Store.products_list = products_list
+        self.products_list = products_list
 
 
     def add_product(self, product):
@@ -19,7 +17,10 @@ class Store:
 
 
     def get_total_quantity(self):
-        return len(self.products_list)
+        total_amount = 0
+        for item in self.products_list:
+            total_amount = total_amount + item.quantity
+        return total_amount
 
 
     def get_all_products(self):
