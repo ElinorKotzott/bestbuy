@@ -41,20 +41,3 @@ class Product:
             raise ValueError(f"Not that many {self.name}s available")
         Product.set_quantity(self, self.quantity - quantity)
         return quantity * self.price
-
-def main():
-    bose = Product("Bose QuietComfort Earbuds", 250, quantity=500)
-    mac = Product("MacBook Air M2", price=1450, quantity=100)
-
-    print(bose.buy(50))
-    print(mac.buy(120))
-    print(mac.is_active())
-
-    bose.show()
-    mac.show()
-
-    bose.set_quantity(1000)
-    bose.show()
-
-if __name__ == "__main__":
-    main()
