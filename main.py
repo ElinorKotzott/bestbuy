@@ -1,5 +1,4 @@
 import sys
-
 import products
 import store
 
@@ -14,44 +13,43 @@ def main():
 
 
 def start(my_store):
+    """prints menu and determines actions based on user choice. handles choice number 3, order, in the inner while"""
     while True:
         print("1. List all products in store\n2. Show total amount in store\n3. Make an order\n4. Quit\n")
-        try:
-            user_choice = int(input().strip())
-            if user_choice == 1:
-                i = 0
-                for product in my_store.get_all_products():
-                    i = i + 1
-                    print(f"{i}. {product.show()}")
-                print()
-            elif user_choice == 2:
-                print(f"Total product quantity: {my_store.get_total_quantity()}\n")
-            elif user_choice == 3:
-                j = 0
-                for product in my_store.get_all_products():
-                    j = j + 1
-                    print(f"{j}. {product.show()}")
-                purchase_list = []
+        user_choice = user_input_and_validate_range(1, 4, False)
+        if user_choice == 1:
+            i = 0
+            for product in my_store.get_all_products():
+                i = i + 1
+                print(f"{i}. {product.show()}")
+            print()
+        elif user_choice == 2:
+            print(f"Total product quantity: {my_store.get_total_quantity()}\n")
+        elif user_choice == 3:
+            j = 0
+            for product in my_store.get_all_products():
+                j = j + 1
+                print(f"{j}. {product.show()}")
 
-                while True:
-                    print(f"\nWhich product would you like? (Enter 1 - {len(my_store.products_list)})")
-                    user_input_for_product = user_input_and_validate_range(1, len(my_store.products_list), True)
-                    if user_input_for_product is None:
-                        break
 
-                    selected_product = my_store.products_list[user_input_for_product - 1]
-                    print(f"How many items do you want to purchase? (Enter 1 - {selected_product.quantity})")
-                    user_input_for_amount = user_input_and_validate_range(1, selected_product.quantity, False)
-                    purchase_list.append((selected_product.name, user_input_for_amount))
+            shopping_list = []
+            while True:
+                print(f"\nWhich product would you like? (Enter 1 - {len(my_store.products_list)} or press Enter to quit)")
+                user_input_for_product = user_input_and_validate_range(1, len(my_store.products_list), True)
+                #None means user pressed Enter
+                if user_input_for_product is None:
+                    break
 
-                my_store.order(purchase_list)
-            elif user_choice == 4:
-                sys.exit()
-            else:
-                raise ValueError
+                selected_product = my_store.products_list[user_input_for_product - 1]
+                print(f"How many items do you want to purchase? (Enter 1 - {selected_product.quantity})")
+                user_input_for_amount = user_input_and_validate_range(1, selected_product.quantity, False)
+                shopping_list.append((selected_product, user_input_for_amount))
+                print("Product added to list!")
 
-        except ValueError:
-            print("Please enter kjkj!\n")
+            print(f"Total spendings: ${my_store.order(shopping_list)}")
+
+        elif user_choice == 4:
+            sys.exit()
 
 
 def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
@@ -67,11 +65,8 @@ def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
                 return user_choice
             else:
                 print("Please enter a number within range!")
-        except (ValueError, IndexError) as e:
-            print("Please enter a valid number!", e)
-
-
-
+        except (ValueError, IndexError):
+            print("Please enter a number!")
 
 
 if __name__ == "__main__":

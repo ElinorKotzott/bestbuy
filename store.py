@@ -34,5 +34,5 @@ class Store:
     def order(self, shopping_list):
         total_price = 0
         for item in shopping_list:
-            total_price = total_price + products.Product.buy(item[0], item[1])
+            total_price = total_price + item[0].buy(item[1])
         return total_price
