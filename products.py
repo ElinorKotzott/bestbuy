@@ -5,8 +5,8 @@ class Product:
             raise ValueError("Invalid input: 'name' cannot be empty, and 'price' and 'quantity' cannot be negative!")
         self.name = name
         self.price = price
-        self.quantity = quantity
         self.active = True
+        self.set_quantity(quantity)
 
 
     def get_quantity(self):
