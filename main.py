@@ -4,9 +4,9 @@ import store
 
 
 def main():
-    product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-                    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                    products.Product("Google Pixel 7", price=500, quantity=250)
+    product_list = [products.LimitedProduct("MacBook Air M2", price=1450, quantity=100),
+                    products.NonStockedProduct("Bose QuietComfort Earbuds", price=250),
+                    products.LimitedProduct("Google Pixel 7", price=500, quantity=250)
                     ]
     best_buy = store.Store(product_list)
     start(best_buy)
