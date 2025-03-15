@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from promotion import Promotion
+from promotions import Promotion
 
 
 class Product(ABC):
@@ -18,16 +18,27 @@ class Product(ABC):
         """returns whether the product is currently active"""
         return self.active
 
+
     def get_promotion(self):
-        """returns the promotion, returns None if there is none"""
+        """returns the promotion"""
         return self.promotion
+
+
+    def get_price(self):
+        """returns the price"""
+        return self.price
+
+
+    def set_promotion(self, promotion):
+        """sets the promotion"""
+        self.promotion = promotion
 
 
     def show(self):
         """returns a string with name, price and possibly the promotion of the product"""
         self_representation = f"{self.name}, Price: ${self.price}"
         if self.promotion is not None:
-            return self_representation + f", Promotion: {self.promotion}"
+            return self_representation + f", Promotion: {self.promotion.name}"
         else:
             return self_representation
 
@@ -37,20 +48,22 @@ class Product(ABC):
         depending on whether or not there is a promo"""
         print(f"Buying {quantity}x {self.name}...")
         if self.promotion is not None:
-            return Promotion.apply_promotion(self.promotion, self, quantity) #TODO is this good?? how is this supposed to even work?? check again later
+            #return Promotion.apply_promotion(self.promotion, self, quantity) # TODO is this good?? how is this supposed to even work?? check again later
+            return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
 
 
 class NonStockedProduct(Product):
 
-    def __init__(self, name, price):
-        """initializes non stocked product by calling the parent constructor"""
-        super().__init__(name, price)
+    pass
+    # def __init__(self, name, price):
+    #     """initializes non stocked product by calling the parent constructor"""
+    #     super().__init__(name, price)
 
 
 class LimitedProduct(Product):
 
-    def __init__(self, name, price, quantity):
+    def __init__(self, name, price, quantity, maximum=None):
         """initializes limited product using the parent constructor and initializes quantity """
         super().__init__(name, price)
         if quantity < 0:
@@ -58,6 +71,7 @@ class LimitedProduct(Product):
         self.quantity = quantity
         if quantity == 0:
             self.deactivate()
+        self.maximum = maximum
 
 
     def get_quantity(self):
@@ -84,6 +98,8 @@ class LimitedProduct(Product):
 
     def show(self):
         """string representation of the limited product using the show method of the parent"""
+        if self.maximum is not None:
+            return f"{super().show()}, Quantity: {self.quantity}, Maximum: {self.maximum}"
         return f"{super().show()}, Quantity: {self.quantity}"
 
 

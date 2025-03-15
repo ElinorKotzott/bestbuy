@@ -1,3 +1,6 @@
+from products import LimitedProduct
+
+
 class Store:
 
     def __init__(self, products_list):
@@ -24,7 +27,8 @@ class Store:
         """calculates and returns total amount of products in the store"""
         total_amount = 0
         for item in self.products_list:
-            total_amount = total_amount + item.quantity
+            if isinstance(item, LimitedProduct):
+                total_amount = total_amount + item.quantity
         return total_amount
 
 
