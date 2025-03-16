@@ -25,10 +25,7 @@ class Store:
 
     def get_total_quantity(self):
         """calculates and returns total amount of limited products in the store"""
-        total_amount = 0
-        for item in self.products_list:
-            if isinstance(item, LimitedProduct):
-                total_amount = total_amount + item.quantity
+        total_amount = sum(item.quantity for item in self.products_list)
         return total_amount
 
 
