@@ -1,7 +1,7 @@
 
 class Product:
 
-    def __init__(self, name, price, promotion=None):
+    def __init__(self, name, price, quantity, promotion=None):
         """initializes Product with entered name and price. active will be true by default"""
         if not name or price < 0:
             raise ValueError("Invalid input: Name cannot be empty and price must not be negative!")
@@ -9,12 +9,22 @@ class Product:
         self.price = price
         self.active = True
         self.promotion = promotion
-        self.quantity = 0
+        self.quantity = quantity
 
 
     def is_active(self):
         """returns whether the product is currently active"""
         return self.active
+
+
+    def activate(self):
+        """activates the product"""
+        self.active = True
+
+
+    def deactivate(self):
+        """deactivates the product"""
+        self.active = False
 
 
     def get_promotion(self):
@@ -47,9 +57,8 @@ class Product:
 
 
     def buy(self, quantity):
-        """prints what is being bought and returns price. price will be calculated differently
+        """returns price. price will be calculated differently
         depending on whether or not there is a promo"""
-        print(f"Buying {quantity}x {self.name}...")
         if self.promotion is not None:
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
@@ -58,7 +67,7 @@ class Product:
 class NonStockedProduct(Product):
 
     def __init__(self, name, price, promotion=None):
-        super().__init__(name, price, promotion)
+        super().__init__(name, price, 0, promotion)
 
 
 class LimitedProduct(Product):
@@ -88,16 +97,6 @@ class LimitedProduct(Product):
         self.quantity = quantity
 
 
-    def activate(self):
-        """activates the product"""
-        self.active = True
-
-
-    def deactivate(self):
-        """deactivates the product"""
-        self.active = False
-
-
     def show(self):
         """string representation of the limited product using the show method of the parent"""
         return f"{super().show()}, Quantity: {self.quantity}, Maximum: {self.maximum}"
@@ -107,5 +106,7 @@ class LimitedProduct(Product):
         """buys specified amount of product if enough products ara available. adjusts available quantity and returns price of bought items"""
         if quantity > self.quantity:
             raise ValueError(f"Not that many {self.name}s available")
+        if quantity > self.maximum:
+            raise ValueError(f"Amount exceeds allowed maximum!")
         self.set_quantity(self.quantity - quantity)
         return super().buy(quantity)

@@ -2,14 +2,16 @@ import sys
 import products
 import store
 import promotions
+from products import NonStockedProduct
 
 
 def main():
     # setup initial stock of inventory
-    product_list = [products.NonStockedProduct("Windows License", price=125),
-                    products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1),
-                    products.LimitedProduct("AirPod Pro 2nd Gen", price = 250, quantity=2000, maximum=2000),
-                    products.NonStockedProduct("Photoshop License", price=3000)
+    product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
+                    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+                    products.Product("Google Pixel 7", price=500, quantity=250),
+                    products.NonStockedProduct("Windows License", price=125),
+                    products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
                     ]
 
     # Create promotion catalog
@@ -19,7 +21,7 @@ def main():
 
     # Add promotions to products
     product_list[0].set_promotion(second_half_price)
-    product_list[2].set_promotion(third_one_free)
+    product_list[1].set_promotion(third_one_free)
     product_list[3].set_promotion(thirty_percent)
 
 
@@ -54,27 +56,23 @@ def start(my_store):
                 if user_input_for_product is None:
                     break
 
-
-
-
                 selected_product = my_store.get_products_list()[user_input_for_product - 1]
                 shopping_cart_quantity_for_product = 0
                 for item in shopping_list:
-                    if item[0].get_maximum() is not None:
-                        if shopping_cart_quantity_for_product > item[0].get_maximum():
-                            print("You exceeded the maximum amount for your order dudi hello")
                     if item[0] == selected_product:
                         shopping_cart_quantity_for_product += item[1]
-                if shopping_cart_quantity_for_product == selected_product.quantity:
+                #only the limited products will be checked for availability
+                if not isinstance(selected_product, NonStockedProduct) and shopping_cart_quantity_for_product == selected_product.quantity:
                     print("There are no more products of this type available!")
                     continue
-
-
-
-
-                available_amount = selected_product.quantity - shopping_cart_quantity_for_product
-                print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")
-                user_input_for_amount = user_input_and_validate_range(1, available_amount, False)
+                #extra logic for non-stocked products that can be bought infinitely
+                if isinstance(selected_product, NonStockedProduct):
+                    print("How many items do you want to purchase?")
+                    user_input_for_amount = user_input_and_validate_range(1, float("inf"), False)
+                else:
+                    available_amount = selected_product.quantity - shopping_cart_quantity_for_product
+                    print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")
+                    user_input_for_amount = user_input_and_validate_range(1, available_amount, False)
                 shopping_list.append((selected_product, user_input_for_amount))
                 print("Product added to list!")
 

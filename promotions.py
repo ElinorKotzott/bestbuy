@@ -49,4 +49,4 @@ class PercentDiscount(Promotion):
 
 
     def apply_promotion(self, product, quantity):
-        return product.get_price() * quantity * (1 - self.percent)
+        return product.get_price() * quantity * (1 - self.percent/100)
