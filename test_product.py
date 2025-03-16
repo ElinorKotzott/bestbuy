@@ -48,18 +48,18 @@ def test_buying_too_much():
     with pytest.raises(ValueError):
         my_product.buy(400)
 
-
-def test_second_half_price_with_one():
-
-def test_second_half_price_with_two():
-def test_second_half_price_with_three():
-
-def test_third_one_free_with_two():
-def test_third_one_free_with_three():
-def test_third_one_free_with_four():
-
-def test_percent_off():
-
-def test_percent_off_raises_error_lower_end():
-def test_percent_off_raises_error_higher_end():
-
+#
+# def test_second_half_price_with_one():
+#
+# def test_second_half_price_with_two():
+# def test_second_half_price_with_three():
+#
+# def test_third_one_free_with_two():
+# def test_third_one_free_with_three():
+# def test_third_one_free_with_four():
+#
+# def test_percent_off():
+#
+# def test_percent_off_raises_error_lower_end():
+# def test_percent_off_raises_error_higher_end():
+#

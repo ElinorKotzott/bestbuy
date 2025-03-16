@@ -8,7 +8,7 @@ def main():
     # setup initial stock of inventory
     product_list = [products.NonStockedProduct("Windows License", price=125),
                     products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1),
-                    products.LimitedProduct("AirPod Pro 2nd Gen", price = 250, quantity=2000),
+                    products.LimitedProduct("AirPod Pro 2nd Gen", price = 250, quantity=2000, maximum=2000),
                     products.NonStockedProduct("Photoshop License", price=3000)
                     ]
 
@@ -54,14 +54,23 @@ def start(my_store):
                 if user_input_for_product is None:
                     break
 
+
+
+
                 selected_product = my_store.get_products_list()[user_input_for_product - 1]
                 shopping_cart_quantity_for_product = 0
                 for item in shopping_list:
+                    if item[0].get_maximum() is not None:
+                        if shopping_cart_quantity_for_product > item[0].get_maximum():
+                            print("You exceeded the maximum amount for your order dudi hello")
                     if item[0] == selected_product:
                         shopping_cart_quantity_for_product += item[1]
                 if shopping_cart_quantity_for_product == selected_product.quantity:
                     print("There are no more products of this type available!")
                     continue
+
+
+
 
                 available_amount = selected_product.quantity - shopping_cart_quantity_for_product
                 print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")

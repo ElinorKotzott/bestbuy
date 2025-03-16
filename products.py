@@ -1,8 +1,5 @@
-from abc import ABC, abstractmethod
-from promotions import Promotion
 
-
-class Product(ABC):
+class Product:
 
     def __init__(self, name, price, promotion=None):
         """initializes Product with entered name and price. active will be true by default"""
@@ -12,6 +9,7 @@ class Product(ABC):
         self.price = price
         self.active = True
         self.promotion = promotion
+        self.quantity = 0
 
 
     def is_active(self):
@@ -22,6 +20,11 @@ class Product(ABC):
     def get_promotion(self):
         """returns the promotion"""
         return self.promotion
+
+
+    def get_quantity(self):
+        """returns quantity"""
+        return self.quantity
 
 
     def get_price(self):
@@ -48,35 +51,34 @@ class Product(ABC):
         depending on whether or not there is a promo"""
         print(f"Buying {quantity}x {self.name}...")
         if self.promotion is not None:
-            #return Promotion.apply_promotion(self.promotion, self, quantity) # TODO is this good?? how is this supposed to even work?? check again later
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
 
 
 class NonStockedProduct(Product):
 
-    pass
-    # def __init__(self, name, price):
-    #     """initializes non stocked product by calling the parent constructor"""
-    #     super().__init__(name, price)
+    def __init__(self, name, price, promotion=None):
+        super().__init__(name, price, promotion)
 
 
 class LimitedProduct(Product):
 
-    def __init__(self, name, price, quantity, maximum=None):
+    def __init__(self, name, price, quantity, maximum, promotion=None):
         """initializes limited product using the parent constructor and initializes quantity """
-        super().__init__(name, price)
+        super().__init__(name, price, promotion)
         if quantity < 0:
-            raise ValueError("Invalid input: Quantity' cannot be negative!")
+            raise ValueError("Invalid input: Quantity cannot be negative!")
         self.quantity = quantity
         if quantity == 0:
             self.deactivate()
+        if maximum <= 0:
+            raise ValueError("Invalid input: Maximum must be greater than zero!")
         self.maximum = maximum
 
 
-    def get_quantity(self):
-        """returns quantity"""
-        return self.quantity
+    def get_maximum(self):
+        """returns maximum"""
+        return self.maximum
 
 
     def set_quantity(self, quantity):
@@ -98,9 +100,7 @@ class LimitedProduct(Product):
 
     def show(self):
         """string representation of the limited product using the show method of the parent"""
-        if self.maximum is not None:
-            return f"{super().show()}, Quantity: {self.quantity}, Maximum: {self.maximum}"
-        return f"{super().show()}, Quantity: {self.quantity}"
+        return f"{super().show()}, Quantity: {self.quantity}, Maximum: {self.maximum}"
 
 
     def buy(self, quantity):

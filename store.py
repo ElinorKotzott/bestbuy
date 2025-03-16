@@ -24,7 +24,7 @@ class Store:
 
 
     def get_total_quantity(self):
-        """calculates and returns total amount of products in the store"""
+        """calculates and returns total amount of limited products in the store"""
         total_amount = 0
         for item in self.products_list:
             if isinstance(item, LimitedProduct):
@@ -33,7 +33,7 @@ class Store:
 
 
     def get_all_products(self):
-        """returns all active products i. e. products with more than 0 quantity"""
+        """returns all active products i.e. products with more than 0 quantity"""
         active_products = []
         for product in self.products_list:
             if product.is_active():
