@@ -12,45 +12,21 @@ def main():
 
 
 def start(my_store):
-    """prints menu and determines actions based on user choice. handles choice number 3, order, in the inner while"""
+    """prints menu and calls function to validate user choice for the menu.
+    exits if user wants to exit. otherwise, sends user choice in to be processed"""
     while True:
         print("1. List all products in store\n2. Show total amount in store\n3. Make an order\n4. Quit\n")
         user_choice = user_input_and_validate_range(1, 4, False)
+
         if user_choice == 1:
             show_products(my_store)
-
         elif user_choice == 2:
             print(f"Total product quantity: {my_store.get_total_quantity()}\n")
         elif user_choice == 3:
             show_products(my_store)
-
-            shopping_list = []
-            while True:
-                print(
-                    f"\nWhich product would you like? (Enter 1 - {len(my_store.get_products_list())} or press Enter to quit)")
-                user_input_for_product = user_input_and_validate_range(1, len(my_store.get_products_list()), True)
-                # None means user pressed Enter without input
-                if user_input_for_product is None:
-                    break
-
-                selected_product = my_store.get_products_list()[user_input_for_product - 1]
-                shopping_cart_quantity_for_product = 0
-                for item in shopping_list:
-                    if item[0] == selected_product:
-                        shopping_cart_quantity_for_product += item[1]
-                if shopping_cart_quantity_for_product == selected_product.quantity:
-                    print("There are no more products of this type available!")
-                    continue
-
-                available_amount = selected_product.quantity - shopping_cart_quantity_for_product
-                print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")
-                user_input_for_amount = user_input_and_validate_range(1, available_amount, False)
-                shopping_list.append((selected_product, user_input_for_amount))
-                print("Product added to list!")
-
-            print(f"Total spendings: ${my_store.order(shopping_list)}")
-
+            process_order(my_store)
         elif user_choice == 4:
+            print("Exiting...")
             return
 
 
@@ -77,6 +53,36 @@ def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
                 print("Please enter a number within range!")
         except ValueError:
             print("Please enter a number!")
+
+
+def process_order(my_store):
+    """processes the order by asking for product type and amount,
+    handling quantity, creating a shopping list and calling order"""
+
+    shopping_list = []
+    while True:
+        print(f"\nWhich product would you like? (Enter 1 - {len(my_store.get_products_list())} or press Enter to quit)")
+        user_input_for_product = user_input_and_validate_range(1, len(my_store.get_products_list()), True)
+        # None means user pressed Enter without input
+        if user_input_for_product is None:
+            break
+
+        selected_product = my_store.get_products_list()[user_input_for_product - 1]
+        shopping_cart_quantity_for_product = 0
+        for item in shopping_list:
+            if item[0] == selected_product:
+                shopping_cart_quantity_for_product += item[1]
+        if shopping_cart_quantity_for_product == selected_product.quantity:
+            print("There are no more products of this type available!")
+            continue
+
+        available_amount = selected_product.quantity - shopping_cart_quantity_for_product
+        print(f"How many items do you want to purchase? (Enter 1 - {available_amount})")
+        user_input_for_amount = user_input_and_validate_range(1, available_amount, False)
+        shopping_list.append((selected_product, user_input_for_amount))
+        print("Product added to list!")
+
+    print(f"Total spendings: ${my_store.order(shopping_list)}\n")
 
 
 if __name__ == "__main__":
