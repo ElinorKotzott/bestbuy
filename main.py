@@ -1,4 +1,3 @@
-import sys
 import products
 import store
 
@@ -57,7 +56,7 @@ def start(my_store):
             print(f"Total spendings: ${my_store.order(shopping_list)}")
 
         elif user_choice == 4:
-            sys.exit()
+            return
 
 
 def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
