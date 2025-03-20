@@ -17,24 +17,19 @@ def start(my_store):
         print("1. List all products in store\n2. Show total amount in store\n3. Make an order\n4. Quit\n")
         user_choice = user_input_and_validate_range(1, 4, False)
         if user_choice == 1:
-            i = 0
-            for product in my_store.get_all_products():
-                i = i + 1
-                print(f"{i}. {product.show()}")
-            print()
+            show_products(my_store)
+
         elif user_choice == 2:
             print(f"Total product quantity: {my_store.get_total_quantity()}\n")
         elif user_choice == 3:
-            j = 0
-            for product in my_store.get_all_products():
-                j = j + 1
-                print(f"{j}. {product.show()}")
+            show_products(my_store)
 
             shopping_list = []
             while True:
-                print(f"\nWhich product would you like? (Enter 1 - {len(my_store.get_products_list())} or press Enter to quit)")
+                print(
+                    f"\nWhich product would you like? (Enter 1 - {len(my_store.get_products_list())} or press Enter to quit)")
                 user_input_for_product = user_input_and_validate_range(1, len(my_store.get_products_list()), True)
-                #None means user pressed Enter without input
+                # None means user pressed Enter without input
                 if user_input_for_product is None:
                     break
 
@@ -59,6 +54,14 @@ def start(my_store):
             return
 
 
+def show_products(my_store):
+    i = 0
+    for product in my_store.get_all_products():
+        i = i + 1
+        print(f"{i}. {product.show()}")
+    print()
+
+
 def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
     """validates user input based on its parameters. returns none if user pressed enter while empty input was allowed. returns valid user input"""
     while True:
@@ -72,7 +75,7 @@ def user_input_and_validate_range(lower_bound, upper_bound, allow_empty_input):
                 return user_choice
             else:
                 print("Please enter a number within range!")
-        except (ValueError, IndexError):
+        except ValueError:
             print("Please enter a number!")
 
 
