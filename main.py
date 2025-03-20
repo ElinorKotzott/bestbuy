@@ -33,7 +33,7 @@ def start(my_store):
 
             shopping_list = []
             while True:
-                print(f"\nWhich product would you like? (Enter 1 - {len(my_store.get.products_list())} or press Enter to quit)")
+                print(f"\nWhich product would you like? (Enter 1 - {len(my_store.get_products_list())} or press Enter to quit)")
                 user_input_for_product = user_input_and_validate_range(1, len(my_store.get_products_list()), True)
                 #None means user pressed Enter without input
                 if user_input_for_product is None:
