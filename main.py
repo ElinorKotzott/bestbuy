@@ -31,6 +31,7 @@ def start(my_store):
 
 
 def show_products(my_store):
+    """prints products with quantity higher than zero, i. e. active products"""
     i = 0
     for product in my_store.get_all_products():
         i = i + 1
