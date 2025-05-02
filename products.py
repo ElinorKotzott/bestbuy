@@ -1,15 +1,22 @@
 
 class Product:
 
-    def __init__(self, name, price, quantity, promotion=None):
+    def __init__(self, name, price, quantity, promotion=None, maximum=None):
         """initializes Product with entered name and price. active will be true by default"""
         if not name or price < 0:
             raise ValueError("Invalid input: Name cannot be empty and price must not be negative!")
+        if quantity is not None:
+            if quantity < 0:
+                raise ValueError("Invalid input: Quantity cannot be negative!")
+            self.quantity = quantity
+            if quantity == 0:
+                self.deactivate()
+        if maximum is not None and maximum <= 0:
+            raise ValueError("Invalid input: Maximum must be greater than zero!")
         self.name = name
         self.price = price
         self.active = True
         self.promotion = promotion
-        self.quantity = quantity
 
 
     def is_active(self):
@@ -41,6 +48,12 @@ class Product:
         """returns the price"""
         return self.price
 
+    def set_quantity(self, quantity):
+        """sets quantity. if quantity is zero, calls deactivate"""
+        if quantity == 0:
+            self.deactivate()
+        self.quantity = quantity
+
 
     def set_promotion(self, promotion):
         """sets the promotion"""
@@ -49,7 +62,7 @@ class Product:
 
     def show(self):
         """returns a string with name, price and possibly the promotion of the product"""
-        self_representation = f"{self.name}, Price: ${self.price}"
+        self_representation = f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
         if self.promotion is not None:
             return self_representation + f", Promotion: {self.promotion.name}"
         else:
@@ -59,6 +72,10 @@ class Product:
     def buy(self, quantity):
         """returns price. price will be calculated differently
         depending on whether or not there is a promo"""
+        if quantity > self.quantity:
+            raise ValueError(f"Not that many {self.name}s available")
+        if not isinstance(self, NonStockedProduct):
+            self.set_quantity(self.quantity - quantity)
         if self.promotion is not None:
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
@@ -68,20 +85,14 @@ class NonStockedProduct(Product):
 
     def __init__(self, name, price, promotion=None):
         super().__init__(name, price, 0, promotion)
+        self.active = True
 
 
 class LimitedProduct(Product):
 
     def __init__(self, name, price, quantity, maximum, promotion=None):
         """initializes limited product using the parent constructor and initializes quantity """
-        super().__init__(name, price, promotion)
-        if quantity < 0:
-            raise ValueError("Invalid input: Quantity cannot be negative!")
-        self.quantity = quantity
-        if quantity == 0:
-            self.deactivate()
-        if maximum <= 0:
-            raise ValueError("Invalid input: Maximum must be greater than zero!")
+        super().__init__(name, price, quantity, promotion)
         self.maximum = maximum
 
 
@@ -90,16 +101,9 @@ class LimitedProduct(Product):
         return self.maximum
 
 
-    def set_quantity(self, quantity):
-        """sets quantity. if quantity is zero, calls deactivate"""
-        if quantity == 0:
-            self.deactivate()
-        self.quantity = quantity
-
-
     def show(self):
         """string representation of the limited product using the show method of the parent"""
-        return f"{super().show()}, Quantity: {self.quantity}, Maximum: {self.maximum}"
+        return f"{super().show()}, Maximum: {self.maximum}"
 
 
     def buy(self, quantity):
@@ -107,6 +111,8 @@ class LimitedProduct(Product):
         if quantity > self.quantity:
             raise ValueError(f"Not that many {self.name}s available")
         if quantity > self.maximum:
-            raise ValueError(f"Amount exceeds allowed maximum!")
+            raise ValueError(f"Amount of {self.name} exceeds allowed maximum!")
         self.set_quantity(self.quantity - quantity)
-        return super().buy(quantity)
+        if self.promotion is not None:
+            return self.promotion.apply_promotion(self, quantity)
+        return quantity * self.price

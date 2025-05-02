@@ -4,6 +4,8 @@ import store
 import promotions
 from products import NonStockedProduct
 
+#TODO maximum of a certain product is not respected when you order it several times within the same order
+
 
 def main():
     # setup initial stock of inventory
@@ -56,7 +58,8 @@ def start(my_store):
                 if user_input_for_product is None:
                     break
 
-                selected_product = my_store.get_products_list()[user_input_for_product - 1]
+                #selected_product = my_store.get_products_list()[user_input_for_product - 1]
+                selected_product = my_store.get_all_products()[user_input_for_product - 1]
                 shopping_cart_quantity_for_product = 0
                 for item in shopping_list:
                     if item[0] == selected_product:

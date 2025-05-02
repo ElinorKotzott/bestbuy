@@ -1,6 +1,3 @@
-from products import LimitedProduct
-
-
 class Store:
 
     def __init__(self, products_list):
@@ -42,5 +39,8 @@ class Store:
         """calls buy on each item in the shopping list and returns total order price"""
         total_price = 0
         for item in shopping_list:
-            total_price = total_price + item[0].buy(item[1])
+            try:
+                total_price = total_price + item[0].buy(item[1])
+            except ValueError as e:
+                print(e)
         return total_price

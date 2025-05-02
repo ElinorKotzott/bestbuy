@@ -26,7 +26,7 @@ class SecondHalfPrice(Promotion):
         if quantity >= 2:
             return product.get_price() * (quantity - 0.5)
         else:
-            return product.get_price * quantity
+            return product.get_price() * quantity
 
 
 
