@@ -1,4 +1,3 @@
-
 class Product:
 
     def __init__(self, name, price, quantity, promotion=None, maximum=None):
@@ -47,6 +46,7 @@ class Product:
         """returns the price"""
         return self.price
 
+
     def set_quantity(self, quantity):
         """sets quantity. if quantity is zero, calls deactivate"""
         if quantity == 0:
@@ -87,9 +87,22 @@ class NonStockedProduct(Product):
 
 
     def buy(self, quantity):
+        """overrides buy method from product. self.quantity won't be adjusted
+        after buying but will always stay on 0. returns price. price will be
+        calculated differently depending on whether there is a promo"""
         if self.promotion is not None:
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
+
+
+    def show(self):
+        """overrides show method from product. does not show quantity as quantity
+        is endless (0). returns a string with name, price and possibly the promotion of the product"""
+        self_representation = f"{self.name}, Price: ${self.price}"
+        if self.promotion is not None:
+            return self_representation + f", Promotion: {self.promotion.name}"
+        else:
+            return self_representation
 
 
 class LimitedProduct(Product):
@@ -106,7 +119,8 @@ class LimitedProduct(Product):
 
 
     def buy(self, quantity):
-        """buys specified amount of product if enough products ara available. adjusts available quantity and returns price of bought items"""
+        """overrides buy from product. buys specified amount of product if enough products ara available.
+        adjusts available quantity and returns price of bought items"""
         if quantity > self.quantity:
             raise ValueError(f"Not that many {self.name}s available")
         if quantity > self.maximum:
