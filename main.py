@@ -4,8 +4,6 @@ import store
 import promotions
 from products import NonStockedProduct
 
-#TODO maximum of a certain product is not respected when you order it several times within the same order
-
 
 def main():
     # setup initial stock of inventory
