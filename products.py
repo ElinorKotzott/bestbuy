@@ -5,12 +5,11 @@ class Product:
         """initializes Product with entered name and price. active will be true by default"""
         if not name or price < 0:
             raise ValueError("Invalid input: Name cannot be empty and price must not be negative!")
-        if quantity is not None:
-            if quantity < 0:
-                raise ValueError("Invalid input: Quantity cannot be negative!")
-            self.quantity = quantity
-            if quantity == 0:
-                self.deactivate()
+        if quantity < 0:
+            raise ValueError("Invalid input: Quantity cannot be negative!")
+        self.quantity = quantity
+        if quantity == 0:
+            self.deactivate()
         if maximum is not None and maximum <= 0:
             raise ValueError("Invalid input: Maximum must be greater than zero!")
         self.name = name
@@ -74,8 +73,7 @@ class Product:
         depending on whether or not there is a promo"""
         if quantity > self.quantity:
             raise ValueError(f"Not that many {self.name}s available")
-        if not isinstance(self, NonStockedProduct):
-            self.set_quantity(self.quantity - quantity)
+        self.set_quantity(self.quantity - quantity)
         if self.promotion is not None:
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
@@ -88,17 +86,18 @@ class NonStockedProduct(Product):
         self.active = True
 
 
+    def buy(self, quantity):
+        if self.promotion is not None:
+            return self.promotion.apply_promotion(self, quantity)
+        return quantity * self.price
+
+
 class LimitedProduct(Product):
 
     def __init__(self, name, price, quantity, maximum, promotion=None):
         """initializes limited product using the parent constructor and initializes quantity """
         super().__init__(name, price, quantity, promotion)
         self.maximum = maximum
-
-
-    def get_maximum(self):
-        """returns maximum"""
-        return self.maximum
 
 
     def show(self):
